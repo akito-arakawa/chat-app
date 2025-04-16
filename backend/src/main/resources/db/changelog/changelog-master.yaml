@@ -5,4 +5,5 @@ databaseChangeLog:
       file: db/changelog/V1.1__create_friend_requests_table.yaml
   - include:
       file: db/changelog/V1.2__create_chat_rooms_table.yaml
-
+  - include:
+      file: db/changelog/V1.3__create_chat_members_table.yaml
