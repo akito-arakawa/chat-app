@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: V1_create_users
+      id: V1.2_create_chat_rooms
       author: aki
       preConditions:
         - sqlCheck:
@@ -8,7 +8,7 @@ databaseChangeLog:
             sql: "SELECT 1 FROM pg_available_extensions WHERE name = 'uuid-ossp'"
       changes:
         - createTable:
-            tableName: users
+            tableName: chat_rooms
             columns:
               - column:
                   name: id
@@ -18,29 +18,34 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: username
-                  type: VARCHAR(255)
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: type
+                  type: VARCHAR(20)
                   constraints:
                     nullable: false
               - column:
-                  name: email
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: password
-                  type: VARCHAR(255)
+                  name: owner_user_id
+                  type: UUID
                   constraints:
                     nullable: false
               - column:
-                  name: public_code
-                  type: VARCHAR(50)
+                  name: join_code
+                  type: VARCHAR(100)
                   constraints:
-                    nullable: false
-              - column:
-                  name: profile_image_url
-                  type: VARCHAR(512)
+                    nullable: true
               - column:
                   name: created_at
                   type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: chat_rooms
+            baseColumnNames: owner_user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_chat_rooms_owner

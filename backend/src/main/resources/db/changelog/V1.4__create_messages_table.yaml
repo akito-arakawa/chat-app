@@ -1,0 +1,54 @@
+databaseChangeLog:
+  - changeSet:
+      id: V1.4_create_messages_table
+      author: aki
+      preConditions:
+        - sqlCheck:
+            expectedResult: 1
+            sql: "SELECT 1 FROM pg_available_extensions WHERE name = 'uuid-ossp'"
+      changes:
+        - createTable:
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: "uuid_generate_v4()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: chat_room_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sender_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: messages
+            baseColumnNames: chat_room_id
+            constraintName: fk_messages_chat_room
+            referencedTableName: chat_rooms
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: messages
+            baseColumnNames: sender_id
+            constraintName: fk_messages_sender
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
