@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 3
+      id: V1.3_create_chat_room_members
       author: aki
       preConditions:
         - sqlCheck:

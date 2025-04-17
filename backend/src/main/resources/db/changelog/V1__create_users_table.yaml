@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
+      id: V1_create_users
       author: aki
       preConditions:
         - sqlCheck:

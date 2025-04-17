@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/V1.2__create_chat_rooms_table.yaml
   - include:
       file: db/changelog/V1.3__create_chat_members_table.yaml
+  - include:
+      file: db/changelog/V1.4__create_messages_table.yaml

@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 2
+      id: V1.1_create_friend_requests
       author: aki
       preConditions:
         - sqlCheck:
