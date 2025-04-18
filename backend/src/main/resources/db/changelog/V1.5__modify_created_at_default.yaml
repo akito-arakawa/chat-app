@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: V1.5_modify_created_at_default
+      author: aki
+      changes:
+        - addDefaultValue:
+            tableName: users
+            columnName: created_at
+            defaultValueComputed: CURRENT_TIMESTAMP
+            columnDataType: TIMESTAMP
