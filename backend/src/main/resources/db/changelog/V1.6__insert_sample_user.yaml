@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert_sample_user
+      author: aki
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: username
+                  value: "sample_user1"
+              - column:
+                  name: email
+                  value: "user1@example.com"
+              - column:
+                  name: password
+                  value: "password"
+              - column:
+                  name: public_code
+                  value: "user1"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: username
+                  value: "sample_user2"
+              - column:
+                  name: email
+                  value: "user2@example.com"
+              - column:
+                  name: password
+                  value: "password"
+              - column:
+                  name: public_code
+                  value: "user2"

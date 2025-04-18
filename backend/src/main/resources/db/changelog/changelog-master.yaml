@@ -9,3 +9,15 @@ databaseChangeLog:
       file: db/changelog/V1.3__create_chat_members_table.yaml
   - include:
       file: db/changelog/V1.4__create_messages_table.yaml
+  - include:
+      file: db/changelog/V1.5__modify_created_at_default.yaml
+  - include:
+      file: db/changelog/V1.6__insert_sample_user.yaml
+  - include:
+      file: db/changelog/V1.7__insert_sample_chat_rooms.yaml
+  - include:
+      file: db/changelog/V1.8__insert_sample_chat_members.yaml
+  - include:
+      file: db/changelog/V1.9__insert_sample_messages.yaml
+  - include:
+      file: db/changelog/V2.0__insert_sample_friend_requests.yaml

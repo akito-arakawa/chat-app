@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert_sample_chat_members
+      author: aki
+      changes:
+        - insert:
+            tableName: chat_room_members
+            columns:
+              - column:
+                  name: id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: room_id
+                  value: b7bd1c27-330d-469e-b071-b9da780df4e9 # Sample chat room ID
+              - column:
+                  name: user_id
+                  value: d9ea7aa6-948d-4ef5-bdf4-c9a9245f87e7 # Sample user ID
+        - insert:
+            tableName: chat_room_members
+            columns:
+              - column:
+                  name: id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: room_id
+                  value: b7bd1c27-330d-469e-b071-b9da780df4e9 # Sample chat room ID
+              - column:
+                  name: user_id
+                  value: 51945377-2e0b-4038-b2a4-9af610517dec # Another sample user ID
