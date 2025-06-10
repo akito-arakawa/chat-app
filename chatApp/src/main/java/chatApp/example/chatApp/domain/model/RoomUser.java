@@ -14,16 +14,21 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoomUser {
-    @Id
+
+    @EmbeddedId
+    private RoomUserId id;
+
     @ManyToOne
+    @MapsId("user")
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Id
+
     @ManyToOne
+    @MapsId("room")
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
-    
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
