@@ -13,4 +13,3 @@ public interface RoomUserRepository extends JpaRepository<RoomUser, RoomUserId> 
     //roomに参加している全ユーザーを取得
     List<RoomUser> findByRoomId(UUID roomId);
 }
-
