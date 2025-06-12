@@ -7,3 +7,6 @@ databaseChangeLog:
       file: db/changeLog/V3__messages_create_table.yaml
   - include:
       file: db/changeLog/V4__room_user_create_table.yaml
+  - include:
+      file: db/changeLog/V5__users_add_columns.yaml
+

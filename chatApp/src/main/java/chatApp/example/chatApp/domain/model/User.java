@@ -26,6 +26,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "role", nullable = false)
+    private Role role;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
