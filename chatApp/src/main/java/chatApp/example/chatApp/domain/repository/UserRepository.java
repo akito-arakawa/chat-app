@@ -9,7 +9,8 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
+    //loginIdを基にUserを取得
     Optional<User> findByLoginId(String loginId);
-
+    //loginIdが正しいかチェック
     boolean existsByLoginId(String loginId);
 }
