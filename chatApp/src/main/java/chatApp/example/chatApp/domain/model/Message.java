@@ -1,0 +1,51 @@
+package chatApp.example.chatApp.domain.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.UUID;
+
+@Entity
+@Table(name = "messages")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Message {
+    @Id
+    @GeneratedValue
+    @Column(name = "id", nullable = false, updatable = false)
+    private UUID id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
+
+    @Column(name = "message", nullable = false)
+    private String message;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Timestamp createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private Timestamp updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Timestamp.from(Instant.now());
+        updatedAt = Timestamp.from(Instant.now());
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = Timestamp.from(Instant.now());
+    }
+
+}

@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: V2__rooms_create_table
+      author: aki
+      preConditions:
+        - sqlCheck:
+            expectedResult: 1
+            sql: "SELECT 1 FROM pg_available_extensions WHERE name = 'uuid-ossp'"
+      changes:
+        createTable:
+          tableName: rooms
+          columns:
+            - column:
+                name: id
+                type: UUID
+                defaultValueComputed: "uuid_generate_v4()"
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: room_code
+                type: VARCHAR(255)
+                constraints:
+                  nullable: false
+                  unique: true
+            - column:
+                name: room_name
+                type: VARCHAR(100)
+                constraints:
+                  nullable: false
+            - column:
+                name: created_at
+                type: TIMESTAMP
+                defaultValueComputed: CURRENT_TIMESTAMP
+            - column:
+                name: updated_at
+                type: TIMESTAMP
+                defaultValueComputed: CURRENT_TIMESTAMP
+
