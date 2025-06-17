@@ -1,4 +1,4 @@
-package chatApp.example.chatApp.domain.service;
+package chatApp.example.chatApp.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
