@@ -1,12 +1,16 @@
 package chatApp.example.chatApp.security;
 
+import chatApp.example.chatApp.domain.model.User;
+import chatApp.example.chatApp.domain.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -14,8 +18,9 @@ import java.util.Date;
 
 @Service
 public class JwtService {
-
     private final Key SECRET_KEY;
+    @Autowired
+    private UserRepository userRepository;
     @Value("${jwt.access.expiration}")
     private long accessTokenExpirationMs;
     @Value("${jwt.refresh.expiration}")
@@ -28,8 +33,11 @@ public class JwtService {
 
     // アクセストークン発行
     public String generateAccessToken(UserDetails userDetails) {
+        User user = userRepository.findByLoginId(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException("userが取得できませんでした"));
+
         return Jwts.builder()
                 .setSubject(userDetails.getUsername()) //トークンが誰のモノか
+                .claim("role", user.getRole().name())   //Role情報を追加
                 .setIssuedAt(new Date()) // 発行時間
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationMs)) // 有効期限
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS256)// 署名
@@ -38,8 +46,10 @@ public class JwtService {
 
     //リフレッシュトークン発行
     public String generateRefreshToken(UserDetails userDetails) {
+        User user = userRepository.findByLoginId(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException("userが取得できませんでした"));
         return Jwts.builder()
                 .setSubject(userDetails.getUsername()) //トークンが誰のモノか
+                .claim("role", user.getRole().name())   //Role情報を追加
                 .setIssuedAt(new Date()) // 発行時間
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs)) // 有効期限
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS256)// 署名
