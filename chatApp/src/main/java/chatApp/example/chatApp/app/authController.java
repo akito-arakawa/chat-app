@@ -2,8 +2,12 @@ package chatApp.example.chatApp.app;
 
 import chatApp.example.chatApp.domain.dto.LoginDto;
 import chatApp.example.chatApp.domain.dto.RegisterDto;
+import chatApp.example.chatApp.domain.model.RefreshToken;
+import chatApp.example.chatApp.domain.model.User;
+import chatApp.example.chatApp.domain.repository.RefreshTokenRepository;
 import chatApp.example.chatApp.domain.service.UserService;
 import chatApp.example.chatApp.security.CreateRefreshTokenService;
+import chatApp.example.chatApp.security.CustomUserDetailsService;
 import chatApp.example.chatApp.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Timestamp;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -37,6 +43,12 @@ public class authController {
 
     @Autowired
     private CreateRefreshTokenService createRefreshTokenService;
+
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     //新規登録
     @PostMapping
@@ -81,4 +93,34 @@ public class authController {
         }
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@RequestBody Map<String, String> request) {
+        String refreshTokenStr = request.get("refreshToken");
+
+        // トークン文字列から該当するリフレッシュトークンエンティティを取得
+        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByToken(refreshTokenStr);
+        //値が空の場合
+        if (optionalRefreshToken.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("無効なリフレッシュトークン");
+        }
+        //値を取得
+        RefreshToken refreshToken = optionalRefreshToken.get();
+
+        //有効期限をチェック
+        if (refreshToken.getExpiryDate().before(new Timestamp(System.currentTimeMillis()))) {
+            //期限切れトークンを削除
+            refreshTokenRepository.delete(refreshToken);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("リフレッシュトークンが期限切れ");
+        }
+
+        //アクセストークンを再発行
+        User user = refreshToken.getUser();
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getLoginId());
+
+        //新しいトークンを作成
+        String newAccessToken = jwtService.generateAccessToken(userDetails);
+
+        //新しいアクセストークンを返す
+        return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
+    }
 }
