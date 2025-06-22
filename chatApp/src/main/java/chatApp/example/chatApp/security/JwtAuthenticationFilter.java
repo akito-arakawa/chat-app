@@ -33,6 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         //リクエストヘッダーが空または、Bearer形式ではない場合
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
+            return;    //以降の処理を回避する
         }
 
         //jwtトークンのみを取得
