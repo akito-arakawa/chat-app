@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: V7__room_insert
+      author: aki
+      changes:
+        - insert:
+            tableName: rooms
+            columns:
+              - column:
+                  name: id
+                  valueComputed: "uuid_generate_v4()"
+              - column:
+                  name: room_code
+                  value: "1234"
+              - column:
+                  name: room_name
+                  value: "test"
+              - column:
+                  name: created_at
+                  valueComputed: "CURRENT_TIMESTAMP"
+              - column:
+                  name: updated_at
+                  valueComputed: "CURRENT_TIMESTAMP"

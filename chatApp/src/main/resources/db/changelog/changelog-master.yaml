@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changeLog/V5__users_add_columns.yaml
   - include:
       file: db/changeLog/V6__refresh_tokens.yaml
+  - include:
+      file: db/changeLog/V7__room_insert.yaml
