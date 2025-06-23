@@ -13,3 +13,7 @@ databaseChangeLog:
       file: db/changeLog/V6__refresh_tokens.yaml
   - include:
       file: db/changeLog/V7__room_insert.yaml
+  - include:
+      file: db/changeLog/V8__ add_on_delete_cascade_to_room_user.yaml
+  - include:
+      file: db/changeLog/V9__add_owner_to_rooms.yaml

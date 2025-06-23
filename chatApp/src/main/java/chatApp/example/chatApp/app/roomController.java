@@ -32,14 +32,24 @@ public class RoomController {
     private RoomUserService roomUserService;
 
     @PostMapping
-    public ResponseEntity<String> addRoom(@Valid @RequestBody RequestRoomDto requestDto) {
+    public ResponseEntity<String> addRoom(@Valid @RequestBody RequestRoomDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
+
+        //ログインユーザーを取得
+        String loginId = userDetails.getUsername();
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザーが存在しません: " + loginId));
+
         //登録処理
-        roomService.addRoom(requestDto);
+        Room room = roomService.addRoom(requestDto, user);
+        //中間テーブルに値を登録
+        roomUserService.joinRoom(user, room);
+
         return ResponseEntity.ok("ルームを作成しました");
     }
 
     @PostMapping("/join")
     public ResponseEntity<String> findByRoom(@RequestBody Map<String, String> requestRoomCode, @AuthenticationPrincipal UserDetails userDetails) {
+        //ルームコードからルーム情報を取得
         String roomCode = requestRoomCode.get("roomCode");
         Room room = roomService.findByRoomCode(roomCode);
 
@@ -76,6 +86,29 @@ public class RoomController {
         roomUserService.leaveRoom(user, room);
 
         return ResponseEntity.ok("ルームから退出しました");
+    }
+
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<String> deleteRoom(@PathVariable UUID roomId,
+                                             @AuthenticationPrincipal UserDetails userDetails) {
+        //ログインユーザーを取得
+        String loginId = userDetails.getUsername();
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザーが存在しません: " + loginId));
+
+        //ルームの取得
+        Room room = roomService.findById(roomId);
+        if (room == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ルームが存在しません");
+        }
+        //ルームの管理者かチェック
+        if (!room.getOwner().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("このルームを削除する権限がありません");
+        }
+        roomService.deleteRoom(room);
+
+        return ResponseEntity.ok("ルームを削除しました。");
     }
 
 }

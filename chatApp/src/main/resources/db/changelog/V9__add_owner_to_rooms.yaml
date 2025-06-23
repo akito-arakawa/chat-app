@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: V9__add_owner_to_rooms
+      author: aki
+      changes:
+        - addColumn:
+            tableName: rooms
+            columns:
+              - column:
+                  name: owner_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: rooms
+            baseColumnNames: owner_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_rooms_owner
