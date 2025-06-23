@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface RoomRepository extends JpaRepository<Room, UUID> {
     //roomCodeからroom情報を取得
     Optional<Room> findByRoomCode(String roomCode);
+    //roomCodeが存在するかチェック
+    boolean existsByRoomCode(String roomCode);
 }

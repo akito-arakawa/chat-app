@@ -1,10 +1,12 @@
 package chatApp.example.chatApp.app;
 
+import chatApp.example.chatApp.domain.dto.RequestRoomDto;
 import chatApp.example.chatApp.domain.model.Room;
 import chatApp.example.chatApp.domain.model.User;
 import chatApp.example.chatApp.domain.repository.UserRepository;
 import chatApp.example.chatApp.domain.service.RoomService;
 import chatApp.example.chatApp.domain.service.RoomUserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/room")
-public class roomController {
+@RequestMapping("/api/rooms")
+public class RoomController {
 
     @Autowired
     private RoomService roomService;
@@ -33,6 +34,13 @@ public class roomController {
     private RoomUserService roomUserService;
 
     @PostMapping
+    public ResponseEntity<String> addRoom(@Valid @RequestBody RequestRoomDto requestDto) {
+        //登録処理
+        roomService.addRoom(requestDto);
+        return ResponseEntity.ok("ルームを作成しました");
+    }
+
+    @PostMapping("/join")
     public ResponseEntity<String> findByRoom(@RequestBody Map<String, String> requestRoomCode, @AuthenticationPrincipal UserDetails userDetails) {
         String roomCode = requestRoomCode.get("roomCode");
         Room room = roomService.findByRoomCode(roomCode);
@@ -52,4 +60,5 @@ public class roomController {
 
         return ResponseEntity.ok("roomに参加しました");
     }
+
 }
