@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 public class RoomService {
     @Autowired
@@ -16,6 +18,11 @@ public class RoomService {
     public Room findByRoomCode(String roomCode) {
         return roomRepository.findByRoomCode(roomCode)
                 .orElseThrow(() -> new RuntimeException("ルームコードが見つかりません: " + roomCode));
+    }
+
+    //roomIdを基にroom参照
+    public Room findById(UUID roomId) {
+        return roomRepository.findById(roomId).orElseThrow(()->new RuntimeException("該当するroomがありません"));
     }
 
     //Room作成
@@ -32,4 +39,5 @@ public class RoomService {
         //roomを登録
         roomRepository.save(room);
     }
+
 }

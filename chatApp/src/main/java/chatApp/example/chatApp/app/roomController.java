@@ -13,12 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -59,6 +57,25 @@ public class RoomController {
         roomUserService.joinRoom(user, room);
 
         return ResponseEntity.ok("roomに参加しました");
+    }
+
+    @DeleteMapping("/exit/{roomId}")
+    public ResponseEntity<String> leaveRoom(@PathVariable UUID roomId,
+                                            @AuthenticationPrincipal UserDetails userDetails) {
+        //ログインユーザーを取得
+        String loginId = userDetails.getUsername();
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザーが存在しません: " + loginId));
+
+        //ルームの取得
+        Room room = roomService.findById(roomId);
+        if (room == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ルームが存在しません");
+        }
+        //ルームから退出
+        roomUserService.leaveRoom(user, room);
+
+        return ResponseEntity.ok("ルームから退出しました");
     }
 
 }

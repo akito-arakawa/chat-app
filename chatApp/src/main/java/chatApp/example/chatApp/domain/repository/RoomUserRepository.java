@@ -16,4 +16,6 @@ public interface RoomUserRepository extends JpaRepository<RoomUser, RoomUserId> 
     List<RoomUser> findByRoomId(UUID roomId);
     //roomに参加しているかチェック
     boolean existsByUserAndRoom(User user, Room room);
+    //roomの参加者を取得
+    RoomUser findByUserAndRoom(User user, Room room);
 }

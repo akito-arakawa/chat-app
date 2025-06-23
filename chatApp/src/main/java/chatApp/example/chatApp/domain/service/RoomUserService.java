@@ -29,4 +29,13 @@ public class RoomUserService {
         //登録
         roomUserRepository.save(roomUser);
     }
+
+    @Transactional
+    public void leaveRoom(User user, Room room) {
+        RoomUser roomUser = roomUserRepository.findByUserAndRoom(user, room);
+        //値が空でない場合roomから退出
+        if (roomUser != null) {
+            roomUserRepository.delete(roomUser);
+        }
+    }
 }
