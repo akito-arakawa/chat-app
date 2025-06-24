@@ -17,3 +17,5 @@ databaseChangeLog:
       file: db/changeLog/V8__ add_on_delete_cascade_to_room_user.yaml
   - include:
       file: db/changeLog/V9__add_owner_to_rooms.yaml
+  - include:
+      file: db/changeLog/V10__add_users_table.yaml

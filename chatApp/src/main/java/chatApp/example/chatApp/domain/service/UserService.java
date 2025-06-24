@@ -26,6 +26,7 @@ public class UserService {
             user.setLoginId(register.getLoginId());
             String password = passwordEncoder.encode(register.getPassword());
             user.setPassword(password);
+            user.setUsername(register.getUsername());
             user.setRole(Role.ROLE_USER);
             userRepository.save(user);
         } catch (Exception e) {

@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: V10__add_owner_to_rooms
+      author: aki
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: user_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_icon
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true

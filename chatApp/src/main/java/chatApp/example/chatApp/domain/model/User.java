@@ -26,6 +26,12 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "user_name", nullable = false)
+    private String username;
+
+    @Column(name = "user_icon")
+    private String iconUrl; // null可の場合
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;

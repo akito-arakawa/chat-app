@@ -33,7 +33,7 @@ public class RoomService {
         if (roomRepository.existsByRoomCode(request.getRoomCode())) {
             throw new IllegalArgumentException("既に使用されているルームコードです。");
         }
-        //オブジェクトを作成
+        //オブジェクトを生成
         Room room = new Room();
         room.setRoomCode(request.getRoomCode());
         room.setRoomName(request.getRoomName());
