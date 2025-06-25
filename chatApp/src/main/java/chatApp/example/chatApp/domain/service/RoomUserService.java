@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.UUID;
+
 @Service
 public class RoomUserService {
     @Autowired
@@ -19,9 +22,7 @@ public class RoomUserService {
         if (roomUserRepository.existsByUserAndRoom(user, room)) {
             return; // すでに参加済みなら何もしない
         }
-        System.out.println(user);
-        System.out.println(room);
-        //オブジェクトを作成
+        //オブジェクトを生成
         RoomUser roomUser = new RoomUser();
         roomUser.setId(new RoomUserId(user.getId(), room.getId()));
         roomUser.setUser(user);
@@ -36,6 +37,14 @@ public class RoomUserService {
         //値が空でない場合roomから退出
         if (roomUser != null) {
             roomUserRepository.delete(roomUser);
+        }
+    }
+
+    public List<RoomUser> findByRoomId(UUID roomId) {
+        try {
+            return roomUserRepository.findByRoomId(roomId);
+        } catch(Exception e) {
+            throw new RuntimeException("値を取得できませんでした。");
         }
     }
 }

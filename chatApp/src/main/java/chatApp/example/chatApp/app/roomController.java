@@ -1,7 +1,10 @@
 package chatApp.example.chatApp.app;
 
 import chatApp.example.chatApp.domain.dto.RequestRoomDto;
+import chatApp.example.chatApp.domain.dto.RoomDetailsDto;
+import chatApp.example.chatApp.domain.dto.RoomUserDto;
 import chatApp.example.chatApp.domain.model.Room;
+import chatApp.example.chatApp.domain.model.RoomUser;
 import chatApp.example.chatApp.domain.model.User;
 import chatApp.example.chatApp.domain.repository.UserRepository;
 import chatApp.example.chatApp.domain.service.RoomService;
@@ -15,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,6 +34,25 @@ public class RoomController {
 
     @Autowired
     private RoomUserService roomUserService;
+
+    @GetMapping("/{roomId}")
+    public ResponseEntity<RoomDetailsDto> getRoom(@PathVariable UUID roomId) {
+        //Room情報を取得
+        Room room = roomService.findById(roomId);
+        String roomName = room.getRoomName();
+        String roomCode = room.getRoomCode();
+        //Roomに参加しているUserを取得
+        List<RoomUser> roomUser = roomUserService.findByRoomId(roomId);
+        //room詳細情報のオブジェクト生成
+        RoomDetailsDto roomDetails = new RoomDetailsDto(
+                roomId,
+                roomName,
+                roomCode,
+                roomUser.stream().map(RoomUserDto::fromEntity).toList()
+        );
+
+        return ResponseEntity.ok(roomDetails);
+    }
 
     @PostMapping
     public ResponseEntity<String> addRoom(@Valid @RequestBody RequestRoomDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
