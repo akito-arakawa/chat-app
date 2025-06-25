@@ -6,6 +6,7 @@ import chatApp.example.chatApp.domain.dto.RoomUserDto;
 import chatApp.example.chatApp.domain.model.Room;
 import chatApp.example.chatApp.domain.model.RoomUser;
 import chatApp.example.chatApp.domain.model.User;
+import chatApp.example.chatApp.domain.repository.RoomUserRepository;
 import chatApp.example.chatApp.domain.repository.UserRepository;
 import chatApp.example.chatApp.domain.service.RoomService;
 import chatApp.example.chatApp.domain.service.RoomUserService;
@@ -34,6 +35,25 @@ public class RoomController {
 
     @Autowired
     private RoomUserService roomUserService;
+
+    @Autowired
+    private RoomUserRepository roomUserRepository;
+
+    @GetMapping("/my/last-active")
+    public ResponseEntity<UUID> getLastActiveRoomId(@AuthenticationPrincipal UserDetails userDetails) {
+        //ログインユーザーを取得
+        String loginId = userDetails.getUsername();
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザーが存在しません: " + loginId));
+        List<Room> rooms = roomUserRepository.findRoomsByUserIdOrderByLatestMessage(user.getId());
+        //ルームが空の場合
+        if (rooms.isEmpty()) {
+            return ResponseEntity.noContent().build(); // 204 No Content
+        }
+        //メッセージが最新のルームを取得
+        Room latest = rooms.get(0);
+        return ResponseEntity.ok(latest.getId());   //IDのみを返す
+    }
 
     @GetMapping("/{roomId}")
     public ResponseEntity<RoomDetailsDto> getRoom(@PathVariable UUID roomId) {

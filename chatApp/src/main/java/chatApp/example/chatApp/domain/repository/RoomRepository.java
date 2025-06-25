@@ -2,6 +2,8 @@ package chatApp.example.chatApp.domain.repository;
 
 import chatApp.example.chatApp.domain.model.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,4 +16,5 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
     Optional<Room> findByRoomCode(String roomCode);
     //roomCodeが存在するかチェック
     boolean existsByRoomCode(String roomCode);
+
 }
