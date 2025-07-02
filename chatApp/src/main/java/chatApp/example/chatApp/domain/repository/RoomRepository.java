@@ -16,5 +16,4 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
     Optional<Room> findByRoomCode(String roomCode);
     //roomCodeが存在するかチェック
     boolean existsByRoomCode(String roomCode);
-
 }

@@ -2,6 +2,7 @@ package chatApp.example.chatApp.app;
 
 import chatApp.example.chatApp.domain.dto.RequestRoomDto;
 import chatApp.example.chatApp.domain.dto.RoomDetailsDto;
+import chatApp.example.chatApp.domain.dto.RoomSummaryDto;
 import chatApp.example.chatApp.domain.dto.RoomUserDto;
 import chatApp.example.chatApp.domain.model.Room;
 import chatApp.example.chatApp.domain.model.RoomUser;
@@ -39,6 +40,20 @@ public class RoomController {
     @Autowired
     private RoomUserRepository roomUserRepository;
 
+    //再度バー表示ルーム一覧
+    @GetMapping("/my")
+    public ResponseEntity<?> getMyRooms(@AuthenticationPrincipal UserDetails userDetails) {
+        //ログインユーザーを取得
+        String loginId = userDetails.getUsername();
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザーが存在しません: " + loginId));
+        //Userの参加中のルームを取得
+        List<RoomSummaryDto> roomList = roomService.getRoomsByUserOrderedByCreatedAt(user.getId());
+
+        return ResponseEntity.ok(roomList);
+    }
+
+    //最新のメッセージテーブルを取得
     @GetMapping("/my/last-active")
     public ResponseEntity<UUID> getLastActiveRoomId(@AuthenticationPrincipal UserDetails userDetails) {
         //ログインユーザーを取得
@@ -55,6 +70,7 @@ public class RoomController {
         return ResponseEntity.ok(latest.getId());   //IDのみを返す
     }
 
+    //ルーム詳細情報を表示
     @GetMapping("/{roomId}")
     public ResponseEntity<RoomDetailsDto> getRoom(@PathVariable UUID roomId) {
         //Room情報を取得
@@ -74,6 +90,7 @@ public class RoomController {
         return ResponseEntity.ok(roomDetails);
     }
 
+    //ルームの作成
     @PostMapping
     public ResponseEntity<String> addRoom(@Valid @RequestBody RequestRoomDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
 
@@ -90,6 +107,7 @@ public class RoomController {
         return ResponseEntity.ok("ルームを作成しました");
     }
 
+    //ルームに参加
     @PostMapping("/join")
     public ResponseEntity<String> findByRoom(@RequestBody Map<String, String> requestRoomCode, @AuthenticationPrincipal UserDetails userDetails) {
         //ルームコードからルーム情報を取得
@@ -112,6 +130,7 @@ public class RoomController {
         return ResponseEntity.ok("roomに参加しました");
     }
 
+    //ルーム退出
     @DeleteMapping("/exit/{roomId}")
     public ResponseEntity<String> leaveRoom(@PathVariable UUID roomId,
                                             @AuthenticationPrincipal UserDetails userDetails) {
@@ -131,6 +150,7 @@ public class RoomController {
         return ResponseEntity.ok("ルームから退出しました");
     }
 
+    //ルーム削除
     @DeleteMapping("/{roomId}")
     public ResponseEntity<String> deleteRoom(@PathVariable UUID roomId,
                                              @AuthenticationPrincipal UserDetails userDetails) {

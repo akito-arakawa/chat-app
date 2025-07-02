@@ -32,4 +32,11 @@ public interface RoomUserRepository extends JpaRepository<RoomUser, RoomUserId> 
     ) DESC
 """)
     List<Room> findRoomsByUserIdOrderByLatestMessage(@Param("userId") UUID userId);
+
+    @Query("""
+    SELECT ru.room FROM RoomUser ru
+    WHERE ru.user.id = :userId
+    ORDER BY ru.room.createdAt ASC
+""")
+    List<Room> findRoomsByUserIdOrderByRoomCreatedAt(@Param("userId") UUID userId);
 }
