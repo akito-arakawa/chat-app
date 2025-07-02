@@ -26,6 +26,10 @@ public class Room {
     @Column(name = "room_name", nullable = false)
     private String roomName;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 

@@ -19,13 +19,12 @@ public class RoomUser {
     private RoomUserId id;
 
     @ManyToOne
-    @MapsId("user")
+    @MapsId("userId")
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-
     @ManyToOne
-    @MapsId("room")
+    @MapsId("roomId")
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 

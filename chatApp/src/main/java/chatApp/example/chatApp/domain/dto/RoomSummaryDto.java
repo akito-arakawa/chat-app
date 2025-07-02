@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterDto {
-    private String loginId;
-    private String password;
-    private String username;
+public class RoomSummaryDto {
+    private UUID roomId;
+    private String roomName;
 }

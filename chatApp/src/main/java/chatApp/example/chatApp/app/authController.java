@@ -30,7 +30,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
-public class authController {
+public class AuthController {
 
     @Autowired
     AuthenticationManager authenticationManager;

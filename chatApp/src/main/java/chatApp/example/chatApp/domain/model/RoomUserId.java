@@ -12,6 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomUserId {
-    private UUID user;
-    private UUID room;
+    private UUID userId;
+    private UUID roomId;
 }

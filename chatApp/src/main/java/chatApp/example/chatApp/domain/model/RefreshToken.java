@@ -14,7 +14,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RefreshToken {
-
     @Id
     @GeneratedValue
     @Column(name = "id", nullable = false, updatable = false)
